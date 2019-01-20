@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests,sys,os
 
 flag=input('请输入“笔趣阁”网站版本，若URL以cc结尾输入1，以com结尾则输入2：\n')
-URL=input('请输入小说的URL(以http://www.biquyun.com开头,例如http://www.biquyun.com/0_748/)：\n')
+URL=input('请输入小说的URL(例如http://www.biquyun.com/0_748/)：\n')
 print("正在连接网站")
 req=requests.get(url=URL)
 req.encoding='GBK'
@@ -21,14 +21,18 @@ href=[]
 title=[]
 print("正在获取各章节网址及标题")
 for i in range(len(a)):
-	if flag == 1:
+	if flag == '1':
 		href.append(a[i].get('href'))
-	elif flag == 2:
+	elif flag == '2':
 		href.append('http://www.biquyun.com'+a[i].get('href'))
 	title.append(a[i].text)
 print('标题获取完成')
-print('小说共%d章'%len(a))
-i=0
+if flag == '1':
+	i=9
+	print('小说共%d章'%(len(a)-9))
+elif flag == '2':
+	i=0
+	print('小说共%d章'%(len(a)))
 while i < len(href):
 	sys.stdout.write("正在下载第%d章内容"%(i+1)+'\r')
 	sys.stdout.flush()
