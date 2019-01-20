@@ -6,8 +6,16 @@ print("正在连接网站")
 req=requests.get(url=URL)
 req.encoding='GBK'
 html=BeautifulSoup(req.text, features="html.parser")
-temp=html.find_all('dd')
-a=BeautifulSoup(str(temp), features="html.parser").find_all('a')
+temp_1=html.find_all('dd')
+a=BeautifulSoup(str(temp_1), features="html.parser").find_all('a')
+info=html.find_all('div', id='info')
+temp_2=BeautifulSoup(str(info), features="html.parser")
+book_title=temp_2.find_all('h1')[0].text
+writer=temp_2.find_all('p')[0].text.replace('\xa0','')
+with open('%s\\%s.txt'%(os.path.dirname(os.path.realpath(__file__)),book_title),'a',encoding='utf-8') as f:
+	f.write(book_title+'\n'+writer+'\n')
+print("正在下载 "+book_title,end=' ')
+print(writer)
 href=[]
 title=[]
 print("正在获取各章节网址及标题")
@@ -25,19 +33,11 @@ while i < len(href):
 	req.encoding='GBK'
 	html_each=BeautifulSoup(req.text, features="html.parser")
 	texts_each=html_each.find_all('div', id='content')
-	temp=''
-	texts=[]
 	if len(texts_each)>0:
-		texts.append(texts_each[0].text.replace('\xa0'*4,''))
-		for j in range(len(texts)):
-			temp=texts[j]+temp
-		with open('C:\\Users\\zhou9\\Desktop\\小说.txt','a',encoding='utf-8') as f:
-			f.write('\n'+title[i]+'\n'+temp)
+		with open('%s\\%s.txt'%(os.path.dirname(os.path.realpath(__file__)),book_title),'a',encoding='utf-8') as f:
+			f.write('\n'+title[i]+'\n'+texts_each[0].text.replace('\xa0',''))
 		i=i+1
 	else:
 		pass
-		#调试时使用
-		#with open('C:\\Users\\zhou9\\Desktop\\小说.txt','a',encoding='utf-8') as f:
-		#	f.write('\n\nwrong at %d\n\n'%i)
 print('\n下载完成')
 input()
