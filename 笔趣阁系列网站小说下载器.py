@@ -32,20 +32,26 @@ print(writer)
 href=[]
 title=[]
 print("正在获取各章节网址及标题")
+flag_echo=0
 for i in range(len(a)):
 	if URL[8:25]=='www.biquge5200.cc':
 		href.append(a[i].get('href'))
+		flag_echo=1
 	elif URL[7:21]=='www.xbiquge.la':
 		href.append('http://www.xbiquge.la'+a[i].get('href'))
+		flag_echo=0
 	elif URL[7:22]=='www.biquyun.com':
 		href.append(URL+a[i].get('href'))
+		flag_echo=0
+	elif URL[7:22]=='www.biqugew.com':
+		href.append('http://www.biqugew.com'+a[i].get('href'))
+		flag_echo=0
 	title.append(a[i].text)
 print('标题获取完成')
 # 判断是否有“最新章节”，若有则去除重复
 N_total=0
 start=0 # 过滤掉开始的重复部分
-flag=len(html.find_all('dt'))
-if flag == 2:
+if flag_echo == 1:
 	N_total = len(a)-9
 	start = 9
 	print('小说共%d章'% N_total)
@@ -53,6 +59,7 @@ else:
 	N_total = len(a)
 	start = 0
 	print('小说共%d章'% N_total)
+print('小说共%d章'% N_total)
 i = start
 while i < len(href):
 	sys.stdout.write("已下载%.3f%%"%((i-start+1)*100/N_total)+'\r')

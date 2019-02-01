@@ -1,1 +1,1 @@
-﻿# 这个爬虫用于下载"笔趣阁"系列网站中的小说，只需输入小说目录页面的url即可使用。现支持 https://biquge5200.cc http://www.biquyun.com http://www.xbiquge.la 三个网站，下载目录为py文件所在位置，文件编码是utf-8。
+# 这个爬虫用于下载"笔趣阁"系列网站中的小说，只需输入小说目录页面的url即可使用。现支持 https://biquge5200.cc http://www.biquyun.com http://www.xbiquge.la http://www.biqugew.com 四个网站，下载目录为py文件所在位置，文件编码是utf-8。环境中需要有requests,beautifulsoup4这两个Python库。
