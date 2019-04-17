@@ -7,6 +7,7 @@ import os
 URL = input('请输入小说的URL(例如http://www.biquyun.com/0_748/)：\n')
 print("正在连接网站")
 req = requests.get(url=URL)
+# 找到html中说明的编码格式
 location = str(req.text).find('charset=')
 codef = str(req.text)[location + 8]
 if codef == 'u':
@@ -14,7 +15,7 @@ if codef == 'u':
 elif codef == 'G'or'g':
     code = 'GBK'
 else:
-    code = input('请输入网页编码格式（例如GBK）：')
+    code = input('请输入网页编码格式（例如GBK）：')  # 若没有找到
 req.encoding = code
 html = BeautifulSoup(req.text, features="html.parser")
 # 生成文件路径
@@ -42,8 +43,12 @@ for i in range(len(a)):
     title.append(a[i].text)
 print('标题获取完成')
 # 判断是否有“最新章节”，若有则去除重复
-start = int(input('请输入小说开始章节（即去掉开头最新章节部分,\
-若无就输入0）：'))  # 过滤掉开始的重复部分
+start = input('请输入小说开始章节（即去掉开头最新章节部分,\
+默认值为0）：')  # 过滤掉开始的重复部分
+if start != '':
+    start = int(start)
+else:
+    start = 0
 N_total = len(a) - start
 print('小说共%d章' % N_total)
 i = start
@@ -54,13 +59,8 @@ while i < len(href):
     req.encoding = code
     html_each = BeautifulSoup(req.text, features="html.parser")
     texts_each = html_each.find_all('div', id='content')
-    # 清理常见空格
+    # 清理空格
     if len(texts_each) > 0:
-        temp_2 = texts_each[0].text.replace('\xa0', '\n')
-        temp_2 = ' '.join(texts_each[0].text.split('&nbsp'))
-        temp_2 = ' '.join(texts_each[0].text.split('\\u00a0'))
-        temp_2 = ' '.join(texts_each[0].text.split('\\u0020'))
-        temp_2 = ' '.join(texts_each[0].text.split('\\u3000'))
         temp_2 = '\n'.join(texts_each[0].text.split())
         with open(path_file, 'a', encoding='utf-8') as f:
             f.write('\n' + title[i] + '\n' + temp_2)
