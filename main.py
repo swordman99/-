@@ -25,7 +25,7 @@ path_file = '%s\\%s.txt' % (os.path.dirname(
     os.path.realpath(__file__)), book_title)
 with open(path_file, 'a', encoding='utf-8') as f:
     f.write(book_title + '\n' + writer + '\n')
-print("正在下载：\n" + '书名：' + book_title + '作者名' + writer)
+print("正在下载：\n" + '书名：' + book_title + '作者名：' + writer)
 # 查找章节名，章节链接
 temp_1 = html.find_all('dd')
 if len(temp_1) == 0:
@@ -39,7 +39,7 @@ for i in range(len(a)):
     temp = a[i].get('href')
     temp = temp.split('/')
     temp = temp[-1].replace('\n', '')
-    href.append(str(URL + temp))
+    href.append(str(URL.replace('index.html', '') + temp))
     title.append(a[i].text)
 print('标题获取完成')
 # 判断是否有“最新章节”，若有则去除重复
@@ -52,6 +52,7 @@ else:
 N_total = len(a) - start
 print('小说共%d章' % N_total)
 i = start
+j = 0
 while i < len(href):
     sys.stdout.write("已下载%.3f%%" % ((i - start + 1) * 100 / N_total) + '\r')
     sys.stdout.flush()
@@ -60,12 +61,15 @@ while i < len(href):
     html_each = BeautifulSoup(req.text, features="html.parser")
     texts_each = html_each.find_all('div', id='content')
     # 清理空格
-    if len(texts_each) > 0:
+    if len(texts_each) > 0 and texts_each[0].text[1:6] != '正在加载中':
         temp_2 = '\n'.join(texts_each[0].text.split())
         with open(path_file, 'a', encoding='utf-8') as f:
             f.write('\n' + title[i] + '\n' + temp_2)
         i = i + 1
     else:  # 防止应网络不畅通造成的错误
+        j = j+1
+        if j > 10:
+            print('网络不畅通或网站被封')
         pass
 print('\n下载完成')
 input()
