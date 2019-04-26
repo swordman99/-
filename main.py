@@ -15,7 +15,7 @@ if codef == 'u':
 elif codef == 'G'or'g':
     code = 'GBK'
 else:
-    code = input('请输入网页编码格式（例如GBK）：')  # 若没有找到
+    code = input('请输入网页编码格式（例如GBK）：')  # 若没有找到编码格式
 req.encoding = code
 html = BeautifulSoup(req.text, features="html.parser")
 # 生成文件路径
@@ -62,14 +62,18 @@ while i < len(href):
     texts_each = html_each.find_all('div', id='content')
     # 清理空格
     if len(texts_each) > 0 and texts_each[0].text[1:6] != '正在加载中':
-        temp_2 = '\n'.join(texts_each[0].text.split())
         with open(path_file, 'a', encoding='utf-8') as f:
-            f.write('\n' + title[i] + '\n' + temp_2)
+            f.write('\n' + title[i] + '\n' +
+                    '\n'.join(texts_each[0].text.split()))
         i = i + 1
     else:  # 防止应网络不畅通造成的错误
         j = j+1
         if j > 10:
-            print('网络不畅通或网站被封')
+            print('网络连接中断或网站被封,跳过此章节')
+            print(title[i])
+            print(href[i])
+            j = 0
+            i = i + 1
         pass
 print('\n下载完成')
 input()
