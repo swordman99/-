@@ -67,7 +67,7 @@ while i < len(href):
                     '\n'.join(texts_each[0].text.split()))
         i = i + 1
     else:  # 防止应网络不畅通造成的错误
-        j = j+1
+        j = j + 1
         if j > 10:
             print('网络连接中断或网站被封,跳过此章节')
             print(title[i])
